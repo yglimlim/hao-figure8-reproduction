@@ -1,0 +1,17 @@
+# Large/model/data outputs
+checkpoints/
+data/
+outputs/
+*.pth
+*.pt
+*.tif
+*.tiff
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Editors / OS
+.vscode/
+.DS_Store
