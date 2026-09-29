@@ -1,0 +1,13 @@
+name: hao_fig8
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - numpy=1.23.5
+  - rasterio=1.3.6
+  - matplotlib
+  - tqdm
+  - pip
+  - pip:
+      - --extra-index-url https://download.pytorch.org/whl/cu118
+      - torch==2.0.1+cu118
