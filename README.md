@@ -5,84 +5,60 @@ Course target:
 > Reproduce **Figure 8 — hydrograph for "This study" only** from  
 > Hao et al. (2024), *Remote Sensing of River Discharge From Medium-Resolution Satellite Imagery Based on Deep Learning*.
 
-The target case in Figure 8 is **CAMELS-BR_76550000**.
+The target case in Figure 8 is **CAMELS-BR_75550000**.
 
 ## Recommended workflow
 
-Run this project on the **UMass Unity HPC cluster** rather than on a laptop.
+Run this project on the **UMass Unity HPC cluster**.
 
-1. Clone this repository on Unity.
-2. Create the Python environment in a work/project directory.
-3. Download the authors' pretrained DRQ checkpoint from Zenodo.
-4. Prepare the Landsat time-series inputs for CAMELS-BR_76550000.
-5. Run the pretrained DRQ model.
-6. Plot only the predicted hydrograph ("This study").
-
-The official model uses a 20-image time window and a Transformer-based temporal model.
-
-## Unity setup
-
-From a Unity shell:
+Use the existing conda environment:
 
 ```bash
 module load conda/latest
-
-git clone https://github.com/yglimlim/hao-figure8-reproduction.git
-cd hao-figure8-reproduction
-
-conda env create -f environment.yml
-conda activate hao_fig8
+conda activate ewre
 ```
 
-Do not run model inference on the Unity login node. Request a GPU session first, for example:
+Project path on Unity:
 
-```bash
-salloc -p gpu-preempt -t 02:00:00 --gpus=1 --mem=16G
+```text
+/nas/cee-water/cjgleason/young/Class/Remote_Sensing/Hao_Figure8/hao-figure8-reproduction
 ```
 
-Then verify that PyTorch sees the GPU:
+The workflow is:
 
-```bash
-python src/check_environment.py
-```
+1. Verify the current environment and pretrained DRQ checkpoint.
+2. Use CAMELS-BR gauge **75550000** metadata and observed streamflow.
+3. Prepare Landsat 5–9 TOA time-series inputs.
+4. Run the pretrained DRQ model.
+5. Plot only the predicted hydrograph ("This study").
+
+The official model uses a 20-image time window and a Transformer-based temporal model.
+
+## Current metadata
+
+The Figure 8 target gauge is **75550000** (not 76550000). Existing downloads under `data/metadata` include CAMELS-BR streamflow and GRWL metadata.
 
 ## Download pretrained model
+
+If the checkpoint is not already present:
 
 ```bash
 bash scripts/download_checkpoint.sh
 ```
 
-This downloads:
+Expected file:
 
 ```text
 checkpoints/DRQ_vCloud_0.01_2024_04_23_17_14.pth
 ```
 
-The checkpoint is released by the paper authors on Zenodo.
-
-## Project layout
-
-```text
-hao-figure8-reproduction/
-├── README.md
-├── environment.yml
-├── checkpoints/        # ignored by git
-├── data/               # ignored by git
-├── outputs/            # ignored by git
-├── scripts/
-│   ├── download_checkpoint.sh
-│   └── gpu_test.sbatch
-└── src/
-    └── check_environment.py
-```
-
 ## Next milestone
 
-The next step is to prepare the Figure 8 input series for **CAMELS-BR_76550000**:
+Prepare the Figure 8 input series for **CAMELS-BR_75550000**:
 
 - Landsat 5–9 TOA bands: Blue, Green, Red, NIR, SWIR1, SWIR2, QA
 - centered 64 × 64 pixel river image chips
 - chronological Landsat time series
 - discharge prior needed to convert relative discharge to absolute discharge
 
-Once the input data are prepared, the released pretrained DRQ model can generate the "This study" hydrograph.
+Once the inputs are prepared, the released pretrained DRQ model can generate the requested "This study" hydrograph.
